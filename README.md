@@ -1,10 +1,10 @@
-# puntuaTuProfe 🎓
+# puntuaTuProfe
 
 **puntuaTuProfe** es una plataforma web estilo "Rate My Professor" diseñada específicamente para que los estudiantes puedan calificar y reseñar a sus docentes. El objetivo es crear una comunidad transparente que ayude a los alumnos a tomar mejores decisiones académicas basadas en la experiencia de sus pares.
 
 ---
 
-## 🚀 Características Principales
+## Características Principales
 
 - **Dashboard Dinámico:** Visualización de estadísticas generales (total de profesores, materias y reseñas) y últimas actividades.
 - **Directorio de Profesores:** Búsqueda y filtrado de docentes por nombre o departamento.
@@ -19,7 +19,7 @@
 
 ---
 
-## 🛠️ Stack Tecnológico
+## Stack Tecnológico
 
 - **Backend:** [Laravel 11+](https://laravel.com/) (PHP 8.2+)
 - **Frontend:** [Blade](https://laravel.com/docs/blade), [Tailwind CSS 4](https://tailwindcss.com/)
@@ -28,7 +28,7 @@
 
 ---
 
-## 📦 Instalación y Configuración
+## Instalación y Configuración
 
 Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 
@@ -70,7 +70,7 @@ npm run dev
 
 ---
 
-## 🏗️ Estructura del Proyecto (Modularizada)
+## Estructura del Proyecto (Modularizada)
 
 El proyecto sigue una arquitectura limpia para facilitar su mantenimiento:
 
@@ -82,7 +82,7 @@ El proyecto sigue una arquitectura limpia para facilitar su mantenimiento:
 
 ---
 
-## 🧪 Pruebas (Testing)
+## Pruebas (Testing)
 
 Para ejecutar la suite de pruebas unitarias y de integración:
 ```bash
@@ -91,7 +91,7 @@ php artisan test
 
 ---
 
-## 🔑 Credenciales de Prueba (Seeder)
+## Credenciales de Prueba (Seeder)
 
 Si utilizaste el comando `--seed`, puedes acceder con:
 - **Admin:** `admin@example.com` / `password`
@@ -99,7 +99,7 @@ Si utilizaste el comando `--seed`, puedes acceder con:
 
 ---
 
-## 📝 Convenciones de Desarrollo
+## Convenciones de Desarrollo
 
 - **Idiomas:** El código (clases, métodos, variables) está en inglés por convención técnica, mientras que la interfaz de usuario está 100% en español.
 - **Validación:** Todas las reseñas requieren un comentario mínimo de 10 caracteres y una materia asociada.
@@ -107,4 +107,4 @@ Si utilizaste el comando `--seed`, puedes acceder con:
 
 ---
 
-Desarrollado con ❤️ para la comunidad estudiantil de la UCC.
+Desarrollado para la comunidad estudiantil de la UCC.
