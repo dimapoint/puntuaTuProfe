@@ -81,7 +81,6 @@ class CourseSeeder extends Seeder
                     ['name' => $name],
                     [
                         'code' => $this->generateCode($name),
-                        'department' => $department,
                     ]
                 );
             }

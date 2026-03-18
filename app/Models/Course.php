@@ -15,7 +15,6 @@ class Course extends Model
     protected $fillable = [
         'code',
         'name',
-        'department',
     ];
 
     public function reviews(): HasMany
