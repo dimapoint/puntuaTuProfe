@@ -17,6 +17,10 @@ class Review extends Model
         'course_id',
         'quality',
         'difficulty',
+        'punctuality',
+        'organization',
+        'takes_attendance',
+        'teacher_role',
         'comment',
         'would_take_again',
     ];
@@ -34,5 +38,20 @@ class Review extends Model
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
+    }
+
+    public function helpfulnessVotes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ReviewHelpfulness::class);
+    }
+
+    public function getHelpfulCountAttribute()
+    {
+        return $this->helpfulnessVotes()->where('is_helpful', true)->count();
+    }
+
+    public function getNotHelpfulCountAttribute()
+    {
+        return $this->helpfulnessVotes()->where('is_helpful', false)->count();
     }
 }

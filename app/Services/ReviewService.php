@@ -14,8 +14,9 @@ class ReviewService
     public function createReview(Teacher $teacher, User $user, array $data)
     {
         $data['user_id'] = $user->id;
-        // Ensure would_take_again is boolean
+        // Ensure booleans
         $data['would_take_again'] = (bool) $data['would_take_again'];
+        $data['takes_attendance'] = (bool) $data['takes_attendance'];
         
         return $teacher->reviews()->create($data);
     }
@@ -30,5 +31,32 @@ class ReviewService
         return Review::where('teacher_id', $teacher->id)
             ->where('user_id', $userId)
             ->exists();
+    }
+
+    /**
+     * Vote on review helpfulness.
+     */
+    public function voteHelpfulness(Review $review, int $userId, bool $isHelpful)
+    {
+        $vote = \App\Models\ReviewHelpfulness::where('review_id', $review->id)
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($vote) {
+            if ($vote->is_helpful === $isHelpful) {
+                // If same vote, remove it (toggle off)
+                $vote->delete();
+                return null;
+            }
+            // Update vote
+            $vote->update(['is_helpful' => $isHelpful]);
+            return $vote;
+        }
+
+        return \App\Models\ReviewHelpfulness::create([
+            'review_id' => $review->id,
+            'user_id' => $userId,
+            'is_helpful' => $isHelpful,
+        ]);
     }
 }

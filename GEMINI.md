@@ -6,8 +6,14 @@
 
 ### Key Features (Implemented)
 - **Public Teacher Directory**: Searchable list of teachers with quality metrics accessible to everyone.
-- **Teacher Profiles**: Detailed views including average quality, difficulty levels, and "would take again" percentages.
-- **Review System**: Authenticated users can submit ratings (1-5), difficulty levels, and comments for specific courses.
+- **Teacher Profiles**: Detailed views including average quality, difficulty, punctuality, organization, and attendance percentages.
+- **Advanced Review System**: 
+    - Ratings (1-5) for Quality, Difficulty, Punctuality, and Organization.
+    - Attendance tracking (Does the teacher take attendance?).
+    - Teacher Role selection (Theory, Practice, or General).
+    - Detailed comments linked to specific subjects.
+- **OAuth Integration**: One-click login/registration with Google restricted to `@ucc.edu.ar` institutional emails.
+- **Review Helpfulness**: Community voting system (Helpful/Not Helpful) for peer reviews.
 - **Course Integration**: Reviews are linked to specific subjects for better context.
 - **Admin Dashboard**: Full CRUD management for teachers and courses.
 - **Spanish Localization**: Core interface and data presentation in Spanish.
@@ -19,6 +25,7 @@
 - **Backend**: PHP 8.3+, Laravel 13 (Standard MVC architecture).
 - **Frontend**: Blade Templating Engine, Vite, Tailwind CSS 4.
 - **Database**: **MySQL** (Production-ready).
+- **Authentication**: Laravel Socialite (OAuth Google).
 - **Service Layer**: Business logic encapsulated in `App\Services` (`TeacherService`, `ReviewService`) for cleaner controllers.
 - **Development Tools**: Composer (PHP) and NPM (Frontend).
 
@@ -35,12 +42,16 @@
 ### Setup
 1. `composer install`
 2. `copy .env.example .env`
-3. Configure your database credentials in `.env`:
+3. Configure your database credentials and OAuth keys in `.env`:
    ```env
    DB_CONNECTION=mysql
    DB_DATABASE=puntuatuprofe
    DB_USERNAME=root
    DB_PASSWORD=your_password
+   
+   GOOGLE_CLIENT_ID=your_id
+   GOOGLE_CLIENT_SECRET=your_secret
+   GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
    ```
 4. `php artisan key:generate`
 5. Create the database: `CREATE DATABASE puntuatuprofe;`
@@ -73,7 +84,18 @@ composer run test
 - **Security**: 
     - Middleware protection for Admin routes.
     - Rate limiting for login and review submissions.
-    - Focus on Institutional Email validation (e.g., `@ucc.edu.ar`).
+    - **OAuth Enforcement**: Focus on Institutional Email validation (e.g., `@ucc.edu.ar`).
+
+---
+
+## Git Workflow (Mandatory)
+
+To ensure stability and a clean history, all development must follow this workflow:
+
+1.  **Feature Branches**: Every new feature, bug fix, or modification must be developed in its own dedicated branch (e.g., `feature/oauth-integration`, `fix/attendance-logic`).
+2.  **Testing & Validation**: Before merging, the feature must be manually verified and pass all automated tests (`composer run test`).
+3.  **Merge Policy**: Branches should only be merged into `master` (or the main branch) once the implementation is complete, idiomatically correct, and verified.
+4.  **No Direct Commits**: Avoid making direct commits to the main branch for complex features.
 
 ---
 

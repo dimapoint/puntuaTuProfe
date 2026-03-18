@@ -16,6 +16,10 @@ class StoreReviewRequest extends FormRequest
         return [
             'quality' => 'required|integer|min:1|max:5',
             'difficulty' => 'required|integer|min:1|max:5',
+            'punctuality' => 'required|integer|min:1|max:5',
+            'organization' => 'required|integer|min:1|max:5',
+            'takes_attendance' => 'required|boolean',
+            'teacher_role' => 'required|in:theory,practice,general',
             'comment' => 'nullable|string|min:10',
             'course_id' => 'required|exists:courses,id',
             'would_take_again' => 'required|boolean',

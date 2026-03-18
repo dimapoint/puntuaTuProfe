@@ -28,16 +28,24 @@ class TeacherService
     {
         $avgQuality = $teacher->reviews()->avg('quality') ?? 0;
         $avgDifficulty = $teacher->reviews()->avg('difficulty') ?? 0;
+        $avgPunctuality = $teacher->reviews()->avg('punctuality') ?? 0;
+        $avgOrganization = $teacher->reviews()->avg('organization') ?? 0;
         $totalReviews = $teacher->reviews()->count();
 
         $wouldTakeAgainCount = $teacher->reviews()->where('would_take_again', true)->count();
         $wouldTakeAgainPercent = $totalReviews > 0 ? round(($wouldTakeAgainCount / $totalReviews) * 100) : 0;
 
+        $takesAttendanceCount = $teacher->reviews()->where('takes_attendance', true)->count();
+        $attendancePercent = $totalReviews > 0 ? round(($takesAttendanceCount / $totalReviews) * 100) : 0;
+
         return [
             'avgQuality' => round($avgQuality, 1),
             'avgDifficulty' => round($avgDifficulty, 1),
+            'avgPunctuality' => round($avgPunctuality, 1),
+            'avgOrganization' => round($avgOrganization, 1),
             'totalReviews' => $totalReviews,
             'wouldTakeAgainPercent' => $wouldTakeAgainPercent,
+            'attendancePercent' => $attendancePercent,
         ];
     }
 

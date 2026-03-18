@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ReviewHelpfulnessController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ Route::get('/teachers/{teacher}', [TeacherController::class, 'show'])->name('tea
 
 Route::middleware('auth')->group(function () {
     Route::post('/teachers/{teacher}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::post('/reviews/{review}/helpfulness', [ReviewHelpfulnessController::class, 'store'])->name('helpfulness.store');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
