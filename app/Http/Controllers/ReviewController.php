@@ -3,34 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Teacher;
-use App\Models\Review;
-use Illuminate\Http\Request;
+use App\Services\ReviewService;
+use App\Http\Requests\StoreReviewRequest;
+use Illuminate\Http\RedirectResponse;
 
 class ReviewController extends Controller
 {
-    public function store(Request $request, Teacher $teacher)
-    {
-        // Verificar si el usuario ya dejó una reseña para este profesor
-        $existingReview = Review::where('teacher_id', $teacher->id)
-            ->where('user_id', auth()->id())
-            ->first();
+    public function __construct(
+        protected ReviewService $reviewService
+    ) {}
 
-        if ($existingReview) {
-            return redirect()->back()->with('error', 'Ya has dejado una reseña para este profesor.');
+    public function store(StoreReviewRequest $request, Teacher $teacher): RedirectResponse
+    {
+        if ($this->reviewService->hasUserReviewedTeacher($teacher, $request->user()->id)) {
+            return redirect()->back()->with('error', __('You have already left a review for this teacher.'));
         }
 
-        $validated = $request->validate([
-            'quality' => 'required|integer|min:1|max:5',
-            'difficulty' => 'required|integer|min:1|max:5',
-            'comment' => 'nullable|string|min:10',
-            'course_id' => 'nullable|exists:courses,id',
-            'would_take_again' => 'nullable|boolean',
-        ]);
+        $this->reviewService->createReview($teacher, $request->user(), $request->validated());
 
-        $validated['user_id'] = auth()->id();
-        
-        $teacher->reviews()->create($validated);
-
-        return redirect()->route('teachers.show', $teacher)->with('success', '¡Reseña añadida con éxito!');
+        return redirect()->route('teachers.show', $teacher)->with('success', __('Review added successfully!'));
     }
 }

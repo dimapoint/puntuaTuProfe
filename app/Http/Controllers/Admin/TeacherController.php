@@ -4,74 +4,57 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StoreTeacherRequest;
+use App\Http\Requests\Admin\UpdateTeacherRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class TeacherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        $teachers = Teacher::orderBy('name')->paginate(15);
+        $teachers = Teacher::with('courses')->orderBy('name')->paginate(15);
         return view('admin.teachers.index', compact('teachers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
         return view('admin.teachers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreTeacherRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'bio' => 'nullable|string',
-        ]);
+        $teacher = Teacher::create($request->safe()->except('courses'));
 
-        Teacher::create($validated);
+        if ($request->has('courses')) {
+            $teacher->courses()->sync($request->courses);
+        }
 
-        return redirect()->route('admin.teachers.index')->with('success', 'Teacher created successfully.');
+        return redirect()->route('admin.teachers.index')->with('success', __('Teacher created successfully.'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Teacher $teacher)
+    public function edit(Teacher $teacher): View
     {
+        $teacher->load('courses');
         return view('admin.teachers.edit', compact('teacher'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Teacher $teacher)
+    public function update(UpdateTeacherRequest $request, Teacher $teacher): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'bio' => 'nullable|string',
-        ]);
+        $teacher->update($request->safe()->except('courses'));
 
-        $teacher->update($validated);
+        if ($request->has('courses')) {
+            $teacher->courses()->sync($request->courses);
+        } else {
+            $teacher->courses()->detach();
+        }
 
-        return redirect()->route('admin.teachers.index')->with('success', 'Teacher updated successfully.');
+        return redirect()->route('admin.teachers.index')->with('success', __('Teacher updated successfully.'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher): RedirectResponse
     {
         $teacher->delete();
-
-        return redirect()->route('admin.teachers.index')->with('success', 'Teacher deleted successfully.');
+        return redirect()->route('admin.teachers.index')->with('success', __('Teacher deleted successfully.'));
     }
 }

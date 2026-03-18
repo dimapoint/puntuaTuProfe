@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('name');
-            $table->string('department');
+            $table->string('department')->nullable();
             $table->timestamps();
         });
     }

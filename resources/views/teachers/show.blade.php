@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            
+
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                     <span class="block sm:inline">{{ session('success') }}</span>
@@ -24,10 +24,10 @@
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="flex-1">
                     <h3 class="text-2xl font-bold text-gray-900">{{ $teacher->name }}</h3>
-                    <p class="text-lg text-indigo-600 font-semibold">{{ $teacher->department }}</p>
+                    <p class="text-lg text-indigo-600 font-semibold">{{ $teacher->courses->pluck('name')->join(', ') }}</p>
                     <p class="mt-4 text-gray-600 leading-relaxed">{{ $teacher->bio }}</p>
                 </div>
-                
+
                 <div class="flex gap-8 items-center bg-gray-50 p-6 rounded-xl border border-gray-100">
                     <div class="text-center">
                         <div class="text-5xl font-black {{ $avgQuality >= 4 ? 'text-green-600' : ($avgQuality >= 2.5 ? 'text-yellow-600' : 'text-red-600') }}">
@@ -35,7 +35,7 @@
                         </div>
                         <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Calidad</div>
                     </div>
-                    
+
                     <div class="h-12 w-px bg-gray-200"></div>
 
                     <div class="text-center">
@@ -76,8 +76,8 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <x-input-label for="course_id" value="Materia (Opcional)" />
-                                    <select id="course_id" name="course_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
+                                    <x-input-label for="course_id" value="Materia" />
+                                    <select id="course_id" name="course_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
                                         <option value="">Selecciona una materia</option>
                                         @foreach($courses as $course)
                                             <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
@@ -90,9 +90,10 @@
 
                                 <div>
                                     <x-input-label for="would_take_again" value="¿Volverías a cursar con este profesor?" />
-                                    <select id="would_take_again" name="would_take_again" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
-                                        <option value="1">Sí</option>
-                                        <option value="0">No</option>
+                                    <select id="would_take_again" name="would_take_again" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
+                                        <option value="">Selecciona una opción</option>
+                                        <option value="1" {{ old('would_take_again') == '1' ? 'selected' : '' }}>Sí</option>
+                                        <option value="0" {{ old('would_take_again') == '0' ? 'selected' : '' }}>No</option>
                                     </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('would_take_again')" />
                                 </div>
@@ -101,13 +102,27 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <x-input-label for="quality" value="Calidad (1-5)" />
-                                    <x-text-input id="quality" name="quality" type="number" min="1" max="5" class="mt-1 block w-full" required placeholder="5 = Excelente" />
+                                    <select id="quality" name="quality" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
+                                        <option value="">Selecciona calidad</option>
+                                        @foreach(range(5, 1) as $value)
+                                            <option value="{{ $value }}" {{ old('quality') == $value ? 'selected' : '' }}>
+                                                {{ $value }} - {{ match($value) { 5=>'Excelente', 4=>'Buena', 3=>'Promedio', 2=>'Mala', 1=>'Pésima' } }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('quality')" />
                                 </div>
 
                                 <div>
                                     <x-input-label for="difficulty" value="Dificultad (1-5)" />
-                                    <x-text-input id="difficulty" name="difficulty" type="number" min="1" max="5" class="mt-1 block w-full" required placeholder="5 = Muy difícil" />
+                                    <select id="difficulty" name="difficulty" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
+                                        <option value="">Selecciona dificultad</option>
+                                        @foreach(range(1, 5) as $value)
+                                            <option value="{{ $value }}" {{ old('difficulty') == $value ? 'selected' : '' }}>
+                                                {{ $value }} - {{ match($value) { 1=>'Muy fácil', 2=>'Fácil', 3=>'Promedio', 4=>'Difícil', 5=>'Muy difícil' } }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     <x-input-error class="mt-2" :messages="$errors->get('difficulty')" />
                                 </div>
                             </div>

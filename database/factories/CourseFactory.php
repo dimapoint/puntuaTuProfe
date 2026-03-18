@@ -17,27 +17,27 @@ class CourseFactory extends Factory
      */
     public function definition(): array
     {
-        $departments = [
-            'Ciencias de la Computación', 
-            'Matemática', 
-            'Física', 
-            'Astronomía', 
-            'Biología', 
-            'Química', 
-            'Historia', 
-            'Lenguas', 
-            'Ingeniería',
-            'Derecho',
-            'Arquitectura'
+        $subjects = [
+            'Programación I',
+            'Análisis Matemático',
+            'Física General',
+            'Bases de Datos',
+            'Redes',
+            'Sistemas Operativos',
+            'Estructuras de Datos',
+            'Ingeniería de Software',
+            'Álgebra Lineal',
+            'Sistemas Distribuidos',
+            'Inteligencia Artificial'
         ];
-        
-        $dept = fake()->randomElement($departments);
-        $deptCode = strtoupper(substr($dept, 0, 2));
+
+        $subj = fake()->randomElement($subjects);
+        $subjCode = strtoupper(substr($subj, 0, 3));
 
         return [
-            'code' => $deptCode . fake()->unique()->numberBetween(100, 999),
-            'name' => $dept . ' ' . fake()->unique()->word(),
-            'department' => $dept,
+            'code' => $subjCode . fake()->unique()->numberBetween(100, 999),
+            'name' => $subj . ' ' . fake()->unique()->numberBetween(1, 4),
+            'department' => fake()->randomElement(['Matemática', 'Programación', 'Ingeniería', 'Hardware', 'Gestión']),
         ];
     }
 }

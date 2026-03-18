@@ -19,15 +19,22 @@
                     </div>
 
                     <div>
-                        <x-input-label for="department" :value="__('Department')" />
-                        <x-text-input id="department" name="department" type="text" class="mt-1 block w-full" :value="old('department', $teacher->department)" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('department')" />
-                    </div>
-
-                    <div>
                         <x-input-label for="bio" :value="__('Bio')" />
                         <textarea id="bio" name="bio" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" rows="4">{{ old('bio', $teacher->bio) }}</textarea>
                         <x-input-error class="mt-2" :messages="$errors->get('bio')" />
+                    </div>
+
+                    <div>
+                        <x-input-label for="courses" :value="__('Courses')" />
+                        <select id="courses" name="courses[]" multiple class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full h-32">
+                            @foreach(\App\Models\Course::orderBy('name')->get() as $course)
+                                <option value="{{ $course->id }}" {{ in_array($course->id, old('courses', $teacher->courses->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                    {{ $course->code }} - {{ $course->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-sm text-gray-500">Hold Ctrl (Windows) or Command (Mac) to select multiple courses.</p>
+                        <x-input-error class="mt-2" :messages="$errors->get('courses')" />
                     </div>
 
                     <div class="flex items-center gap-4">

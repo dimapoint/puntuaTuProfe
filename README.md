@@ -1,58 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# puntuaTuProfe 🎓
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**puntuaTuProfe** es una plataforma web estilo "Rate My Professor" diseñada específicamente para que los estudiantes puedan calificar y reseñar a sus docentes. El objetivo es crear una comunidad transparente que ayude a los alumnos a tomar mejores decisiones académicas basadas en la experiencia de sus pares.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Características Principales
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Dashboard Dinámico:** Visualización de estadísticas generales (total de profesores, materias y reseñas) y últimas actividades.
+- **Directorio de Profesores:** Búsqueda y filtrado de docentes por nombre o departamento.
+- **Sistema de Calificación:** 
+  - Calidad (1-5)
+  - Dificultad (1-5)
+  - Recomendación (¿Volverías a cursar?)
+  - Comentarios detallados por materia.
+- **Base de Datos Académica:** Incluye el plan de estudios completo de **Ingeniería en Informática (UCC)**.
+- **Panel de Administración:** Gestión completa de profesores, materias y usuarios.
+- **Seguridad Institucional:** Validación de registro exclusiva para correos `@ucc.edu.ar`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 🛠️ Stack Tecnológico
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Backend:** [Laravel 11+](https://laravel.com/) (PHP 8.2+)
+- **Frontend:** [Blade](https://laravel.com/docs/blade), [Tailwind CSS 4](https://tailwindcss.com/)
+- **Base de Datos:** SQLite (Desarrollo)
+- **Herramientas:** Vite, Composer, NPM
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 📦 Instalación y Configuración
 
-## Agentic Development
+Sigue estos pasos para poner en marcha el proyecto en tu entorno local:
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+### 1. Clonar el repositorio
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/tu-usuario/puntuatuprofe.git
+cd puntuaTuProfe
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Instalar dependencias
+```bash
+composer install
+npm install
+```
 
-## Contributing
+### 3. Configurar el entorno
+Copia el archivo de ejemplo y genera la clave de la aplicación:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 4. Preparar la base de datos
+Crea el archivo de SQLite y ejecuta las migraciones junto con los seeders (esto cargará las materias de la UCC y datos de prueba):
+```bash
+touch database/database.sqlite
+php artisan migrate:fresh --seed
+```
 
-## Code of Conduct
+### 5. Compilar assets y ejecutar servidor
+En terminales separadas:
+```bash
+# Terminal A: Servidor de desarrollo
+php artisan serve
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Terminal B: Compilación de frontend (Vite)
+npm run dev
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🏗️ Estructura del Proyecto (Modularizada)
 
-## License
+El proyecto sigue una arquitectura limpia para facilitar su mantenimiento:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **`app/Services`**: Contiene la lógica de negocio (e.g., `TeacherService`, `ReviewService`).
+- **`app/Http/Requests`**: Clases de validación personalizadas para formularios.
+- **`app/Models`**: Modelos Eloquent con Scopes para consultas optimizadas.
+- **`resources/views/components`**: Componentes Blade reutilizables (e.g., `teacher-card`).
+- **`lang/es.json`**: Traducciones completas al español.
+
+---
+
+## 🧪 Pruebas (Testing)
+
+Para ejecutar la suite de pruebas unitarias y de integración:
+```bash
+php artisan test
+```
+
+---
+
+## 🔑 Credenciales de Prueba (Seeder)
+
+Si utilizaste el comando `--seed`, puedes acceder con:
+- **Admin:** `admin@example.com` / `password`
+- **Usuarios:** Revisa la tabla `users` para correos autogenerados (todos usan la contraseña `password`).
+
+---
+
+## 📝 Convenciones de Desarrollo
+
+- **Idiomas:** El código (clases, métodos, variables) está en inglés por convención técnica, mientras que la interfaz de usuario está 100% en español.
+- **Validación:** Todas las reseñas requieren un comentario mínimo de 10 caracteres y una materia asociada.
+- **Seguridad:** El registro está restringido a dominios `@ucc.edu.ar`.
+
+---
+
+Desarrollado con ❤️ para la comunidad estudiantil de la UCC.

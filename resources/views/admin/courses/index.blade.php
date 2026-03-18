@@ -5,7 +5,7 @@
                 {{ __('Manage Courses') }}
             </h2>
             <a href="{{ route('admin.courses.create') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                Add Course
+                {{ __('Add Course') }}
             </a>
         </div>
     </x-slot>
@@ -23,10 +23,9 @@
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
-                                <th scope="col" class="px-6 py-3">Code</th>
-                                <th scope="col" class="px-6 py-3">Name</th>
-                                <th scope="col" class="px-6 py-3">Department</th>
-                                <th scope="col" class="px-6 py-3">Actions</th>
+                                <th scope="col" class="px-6 py-3">{{ __('Code') }}</th>
+                                <th scope="col" class="px-6 py-3">{{ __('Name') }}</th>
+                                <th scope="col" class="px-6 py-3">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,15 +37,12 @@
                                     <td class="px-6 py-4">
                                         {{ $course->name }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        {{ $course->department }}
-                                    </td>
                                     <td class="px-6 py-4 space-x-2 flex">
-                                        <a href="{{ route('admin.courses.edit', $course) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                        <a href="{{ route('admin.courses.edit', $course) }}" class="text-indigo-600 hover:text-indigo-900">{{ __('Edit') }}</a>
+                                        <form action="{{ route('admin.courses.destroy', $course) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure?') }}');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900">{{ __('Delete') }}</button>
                                         </form>
                                     </td>
                                 </tr>

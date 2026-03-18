@@ -24,12 +24,6 @@
                         <x-input-error class="mt-2" :messages="$errors->get('name')" />
                     </div>
 
-                    <div>
-                        <x-input-label for="department" :value="__('Department')" />
-                        <x-text-input id="department" name="department" type="text" class="mt-1 block w-full" :value="old('department', $course->department)" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('department')" />
-                    </div>
-
                     <div class="flex items-center gap-4">
                         <x-primary-button>{{ __('Update') }}</x-primary-button>
                         <a href="{{ route('admin.courses.index') }}" class="text-gray-600 hover:text-gray-900">Cancel</a>

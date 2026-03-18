@@ -4,74 +4,44 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\StoreCourseRequest;
+use App\Http\Requests\Admin\UpdateCourseRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CourseController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        $courses = Course::orderBy('code')->paginate(15);
+        $courses = Course::orderBy('name')->paginate(15);
         return view('admin.courses.index', compact('courses'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
         return view('admin.courses.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreCourseRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:10|unique:courses,code',
-            'name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-        ]);
-
-        Course::create($validated);
-
-        return redirect()->route('admin.courses.index')->with('success', 'Course created successfully.');
+        Course::create($request->validated());
+        return redirect()->route('admin.courses.index')->with('success', __('Course created successfully.'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Course $course)
+    public function edit(Course $course): View
     {
         return view('admin.courses.edit', compact('course'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Course $course)
+    public function update(UpdateCourseRequest $request, Course $course): RedirectResponse
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:10|unique:courses,code,' . $course->id,
-            'name' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-        ]);
-
-        $course->update($validated);
-
-        return redirect()->route('admin.courses.index')->with('success', 'Course updated successfully.');
+        $course->update($request->validated());
+        return redirect()->route('admin.courses.index')->with('success', __('Course updated successfully.'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Course $course)
+    public function destroy(Course $course): RedirectResponse
     {
         $course->delete();
-
-        return redirect()->route('admin.courses.index')->with('success', 'Course deleted successfully.');
+        return redirect()->route('admin.courses.index')->with('success', __('Course deleted successfully.'));
     }
 }

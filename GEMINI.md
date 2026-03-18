@@ -1,23 +1,26 @@
-# GEMINI.md
+# GEMINI.md - puntuaTuProfe
 
 ## Project Overview
 
-**puntuaTuProfe** is a web application designed to be a "Rate My Professor" style site. It is built using the **Laravel 13** framework, focusing on providing a platform for students to rate and review their teachers.
+**puntuaTuProfe** is a web application designed as a "Rate My Professor" platform for students. It enables users to search for teachers, view their statistics, and share academic experiences through a detailed rating and review system.
 
-### Key Features (Planned)
-- Teacher profiles and search.
-- Rating system (quality, difficulty, etc.).
-- Student reviews and comments.
-- Course and department categorization.
+### Key Features (Implemented)
+- **Public Teacher Directory**: Searchable list of teachers with quality metrics accessible to everyone.
+- **Teacher Profiles**: Detailed views including average quality, difficulty levels, and "would take again" percentages.
+- **Review System**: Authenticated users can submit ratings (1-5), difficulty levels, and comments for specific courses.
+- **Course Integration**: Reviews are linked to specific subjects for better context.
+- **Admin Dashboard**: Full CRUD management for teachers and courses.
+- **Spanish Localization**: Core interface and data presentation in Spanish.
 
 ---
 
 ## Technologies & Architecture
 
-- **Backend:** PHP 8.3+, Laravel 13 (Standard MVC architecture).
-- **Frontend:** Blade Templating Engine, Vite, Tailwind CSS 4.
-- **Database:** SQLite (default for local development, as seen in `database/database.sqlite`).
-- **Development Tools:** Composer for PHP dependencies, NPM for frontend dependencies.
+- **Backend**: PHP 8.3+, Laravel 13 (Standard MVC architecture).
+- **Frontend**: Blade Templating Engine, Vite, Tailwind CSS 4.
+- **Database**: **MySQL** (Production-ready).
+- **Service Layer**: Business logic encapsulated in `App\Services` (`TeacherService`, `ReviewService`) for cleaner controllers.
+- **Development Tools**: Composer (PHP) and NPM (Frontend).
 
 ---
 
@@ -27,30 +30,29 @@
 - PHP 8.3+
 - Composer
 - Node.js & NPM
-- PHP Extensions: `fileinfo`, `pdo_sqlite` (recommended).
+- MySQL Server
 
 ### Setup
-Run the following command to set up the environment, install dependencies, and run migrations:
-```bash
-composer run setup
-```
-Alternatively, follow these manual steps:
 1. `composer install`
-2. `copy .env.example .env` (if not already present)
-3. `php artisan key:generate`
-4. `touch database/database.sqlite` (if not present)
-5. `php artisan migrate`
-6. `npm install`
-7. `npm run build`
+2. `copy .env.example .env`
+3. Configure your database credentials in `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_DATABASE=puntuatuprofe
+   DB_USERNAME=root
+   DB_PASSWORD=your_password
+   ```
+4. `php artisan key:generate`
+5. Create the database: `CREATE DATABASE puntuatuprofe;`
+6. `php artisan migrate`
+7. `npm install`
+8. `npm run build`
 
 ### Development
-Start the development environment (starts server, queue, logs, and Vite):
+Start the full development environment:
 ```bash
 composer run dev
 ```
-Or separately:
-- **Server:** `php artisan serve`
-- **Vite:** `npm run dev`
 
 ### Testing
 Run the test suite:
@@ -60,22 +62,22 @@ composer run test
 
 ---
 
-## Development Conventions
+## Development Conventions & Best Practices
 
-- **Models:** Located in `app/Models`. Use Eloquent for database interactions.
-- **Controllers:** Located in `app/Http/Controllers`.
-- **Routes:**
-  - Web routes: `routes/web.php`
-  - API routes: `routes/api.php` (if needed)
-  - Console routes: `routes/console.php`
-- **Views:** Blade templates located in `resources/views`.
-- **Migrations:** Located in `database/migrations`. Use `php artisan make:migration` to create new ones.
-- **Tests:** Located in `tests/`. Use `php artisan test` or `phpunit`.
-- **Assets:** Managed by Vite in `resources/js` and `resources/css`. Tailwind CSS 4 is pre-configured.
+- **Service Layer**: Keep controllers lean. All complex logic (stats calculation, search filtering) must reside in Services.
+- **Eloquent Scopes**: Use scopes in Models (e.g., `scopeSearch`, `scopeWithAvgQuality`) for reusable query logic.
+- **Form Requests**: All validation must be handled in `App\Http\Requests`.
+- **Blade Components**: Utilize `resources/views/components` for repetitive UI elements like teacher cards or buttons.
+- **Environment Safety**: Never commit `.env` files. Ensure `.env.example` is kept up to date.
+- **Tailwind 4**: Use modern Tailwind 4 syntax and directives.
+- **Security**: 
+    - Middleware protection for Admin routes.
+    - Rate limiting for login and review submissions.
+    - Focus on Institutional Email validation (e.g., `@ucc.edu.ar`).
 
 ---
 
-## Project-Specific Notes
-- The project is in its initial scaffolding phase.
-- Goal: Implement features similar to "Rate My Professor".
-- Primary focus: User-generated ratings and reviews for educational staff.
+## Roadmap & Notes
+- The project is currently in an active development phase.
+- **Goal**: Provide a transparent and useful tool for the student community.
+- **Focus**: Data integrity and meaningful user-generated content.
