@@ -17,6 +17,10 @@ class DashboardController extends Controller
             'reviews' => Review::count(),
             'courses' => Course::count(),
             'users' => User::count(),
+            'google_users' => User::whereNotNull('google_id')->count(),
+            'helpfulness_votes' => \App\Models\ReviewHelpfulness::count(),
+            'avg_punctuality' => Review::avg('punctuality') ?? 0,
+            'avg_organization' => Review::avg('organization') ?? 0,
         ];
 
         $latest_reviews = Review::with(['teacher', 'user'])->latest()->take(5)->get();

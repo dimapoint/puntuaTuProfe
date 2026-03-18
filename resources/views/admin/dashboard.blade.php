@@ -63,6 +63,57 @@
                 </div>
             </div>
 
+            <!-- Second Row of Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Google Users -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
+                    <div class="p-3 bg-blue-50 rounded-lg text-blue-600">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.21 5.39-7.84 5.39-4.84 0-8.79-4.01-8.79-8.94s3.95-8.94 8.79-8.94c2.75 0 4.59 1.17 5.65 2.18l2.58-2.48C19.06 1.45 15.93 0 12.48 0 5.86 0 .5 5.37.5 12s5.36 12 11.98 12c6.91 0 11.51-4.86 11.51-11.72 0-.78-.08-1.38-.18-1.97H12.48z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">{{ __('Google Users') }}</div>
+                        <div class="text-3xl font-black text-gray-900">{{ $stats['google_users'] }}</div>
+                        <div class="mt-2 text-xs text-blue-400 font-medium italic">OAuth Enabled</div>
+                    </div>
+                </div>
+
+                <!-- Helpful Votes -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
+                    <div class="p-3 bg-indigo-50 rounded-lg text-indigo-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.757c1.246 0 2.254 1.008 2.254 2.254 0 .456-.14.88-.38 1.233l-3.342 4.96c-.235.35-.615.553-1.018.553h-3.271v2a2 2 0 01-2 2h-1a2 2 0 01-2-2v-9a2 2 0 012-2h3zM7 10V9a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1a2 2 0 002-2v-7"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">{{ __('Helpful Votes') }}</div>
+                        <div class="text-3xl font-black text-gray-900">{{ $stats['helpfulness_votes'] }}</div>
+                        <div class="mt-2 text-xs text-indigo-400 font-medium italic">Review Engagement</div>
+                    </div>
+                </div>
+
+                <!-- Avg Punctuality -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
+                    <div class="p-3 bg-orange-50 rounded-lg text-orange-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">{{ __('Punctuality') }}</div>
+                        <div class="text-3xl font-black text-gray-900">{{ number_format($stats['avg_punctuality'], 1) }}</div>
+                        <div class="mt-2 text-xs text-orange-400 font-medium italic">Global Avg.</div>
+                    </div>
+                </div>
+
+                <!-- Avg Organization -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-start gap-4 hover:shadow-md transition-shadow">
+                    <div class="p-3 bg-purple-50 rounded-lg text-purple-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-500 uppercase tracking-wider">{{ __('Organization') }}</div>
+                        <div class="text-3xl font-black text-gray-900">{{ number_format($stats['avg_organization'], 1) }}</div>
+                        <div class="mt-2 text-xs text-purple-400 font-medium italic">Global Avg.</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- Recent Reviews -->
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

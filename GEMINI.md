@@ -95,7 +95,8 @@ To ensure stability and a clean history, all development must follow this workfl
 1.  **Feature Branches**: Every new feature, bug fix, or modification must be developed in its own dedicated branch (e.g., `feature/oauth-integration`, `fix/attendance-logic`).
 2.  **Testing & Validation**: Before merging, the feature must be manually verified and pass all automated tests (`composer run test`).
 3.  **Merge Policy**: Branches should only be merged into `master` (or the main branch) once the implementation is complete, idiomatically correct, and verified.
-4.  **No Direct Commits**: Avoid making direct commits to the main branch for complex features.
+4.  **Admin Dashboard Sync**: Any feature that adds new metrics, data types, or key statistics must also include the corresponding updates to the **Admin Dashboard** (Controller and View) to ensure administrators have full visibility of the system's state.
+5.  **No Direct Commits**: Avoid making direct commits to the main branch for complex features.
 
 ---
 
