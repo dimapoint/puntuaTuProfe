@@ -75,6 +75,17 @@ composer run test
 
 ## Development Conventions & Best Practices
 
+- **Commit Conventions**: All commit messages must follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification. This ensures a consistent, readable, and machine-parsable commit history.
+    - **Format**: `<type>[optional scope]: <description>`
+    - **Examples**:
+        - `feat: add Google OAuth integration`
+        - `fix(auth): resolve CSRF token mismatch in tests`
+        - `docs: update GEMINI.md with new workflow`
+        - `refactor(reviews): simplify helpfulness vote logic`
+    - **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+
+- **Function Documentation**: All public methods in controllers, services, and models must be documented using PHPDoc blocks. The documentation should clearly explain the method's purpose, its parameters (`@param`), and its return value (`@return`).
+
 - **Service Layer**: Keep controllers lean. All complex logic (stats calculation, search filtering) must reside in Services.
 - **Eloquent Scopes**: Use scopes in Models (e.g., `scopeSearch`, `scopeWithAvgQuality`) for reusable query logic.
 - **Form Requests**: All validation must be handled in `App\Http\Requests`.
