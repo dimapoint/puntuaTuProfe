@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\TeacherService;
-use Illuminate\Http\Request;
+use App\Services\StatisticsService;
 
 class DashboardController extends Controller
 {
     public function __construct(
-        protected TeacherService $teacherService
+        protected StatisticsService $statisticsService
     ) {}
 
     public function index()
     {
-        $stats = $this->teacherService->getDashboardStats();
+        $stats = $this->statisticsService->getDashboardStats();
 
         return view('dashboard', [
             'teacherCount' => $stats['teacher_count'],

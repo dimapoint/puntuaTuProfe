@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
 use App\Http\Requests\Admin\StoreCourseRequest;
 use App\Http\Requests\Admin\UpdateCourseRequest;
+use App\Models\Course;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -13,7 +13,8 @@ class CourseController extends Controller
 {
     public function index(): View
     {
-        $courses = Course::orderBy('name')->paginate(15);
+        $courses = Course::orderBy('name')->paginate(50);
+
         return view('admin.courses.index', compact('courses'));
     }
 
@@ -25,6 +26,7 @@ class CourseController extends Controller
     public function store(StoreCourseRequest $request): RedirectResponse
     {
         Course::create($request->validated());
+
         return redirect()->route('admin.courses.index')->with('success', __('Course created successfully.'));
     }
 
@@ -36,12 +38,14 @@ class CourseController extends Controller
     public function update(UpdateCourseRequest $request, Course $course): RedirectResponse
     {
         $course->update($request->validated());
+
         return redirect()->route('admin.courses.index')->with('success', __('Course updated successfully.'));
     }
 
     public function destroy(Course $course): RedirectResponse
     {
         $course->delete();
+
         return redirect()->route('admin.courses.index')->with('success', __('Course deleted successfully.'));
     }
 }

@@ -1,2 +1,73 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
+
+@theme {
+    /* M3 Expressive - Color System (Indigo/Fuchsia Vibrant) */
+    --color-m3-primary: #4f46e5;
+    --color-m3-on-primary: #ffffff;
+    --color-m3-primary-container: #e0e7ff;
+    --color-m3-on-primary-container: #1e1b4b;
+    
+    --color-m3-secondary: #475569;
+    --color-m3-on-secondary: #ffffff;
+    --color-m3-secondary-container: #f1f5f9;
+    --color-m3-on-secondary-container: #0f172a;
+    
+    --color-m3-tertiary: #c026d3;
+    --color-m3-on-tertiary: #ffffff;
+    --color-m3-tertiary-container: #fae8ff;
+    --color-m3-on-tertiary-container: #4a044e;
+    
+    --color-m3-surface: #ffffff;
+    --color-m3-surface-variant: #f8fafc;
+    --color-m3-on-surface: #0f172a;
+    --color-m3-on-surface-variant: #475569;
+    --color-m3-outline: #e2e8f0;
+    
+    /* M3 Shapes - Expressive Corner Radii */
+    --radius-m3-small: 8px;
+    --radius-m3-medium: 12px;
+    --radius-m3-large: 16px;
+    --radius-m3-xl: 28px;
+    --radius-m3-full: 9999px;
+    
+    /* M3 Elevation */
+    --shadow-m3-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-m3-2: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-m3-3: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+@layer base {
+    body {
+        @apply bg-m3-surface text-m3-on-surface font-sans selection:bg-m3-primary-container selection:text-m3-on-primary-container;
+    }
+}
+
+@layer components {
+    /* M3 Expressive Buttons */
+    .m3-btn-filled {
+        @apply inline-flex items-center justify-center px-6 py-3 bg-m3-primary text-m3-on-primary rounded-m3-xl font-bold transition-all hover:shadow-m3-2 hover:brightness-110 active:scale-95 disabled:opacity-50;
+    }
+    
+    .m3-btn-tonal {
+        @apply inline-flex items-center justify-center px-6 py-3 bg-m3-primary-container text-m3-on-primary-container rounded-m3-xl font-bold transition-all hover:brightness-95 active:scale-95 disabled:opacity-50;
+    }
+    
+    .m3-btn-outlined {
+        @apply inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-m3-outline text-m3-primary rounded-m3-xl font-bold transition-all hover:bg-m3-primary/5 active:scale-95 disabled:opacity-50;
+    }
+    
+    /* M3 Expressive Card */
+    .m3-card {
+        @apply bg-m3-surface border border-m3-outline rounded-m3-large shadow-m3-1 hover:shadow-m3-2 transition-all duration-300 overflow-hidden;
+    }
+    
+    .m3-card-elevated {
+        @apply bg-m3-surface rounded-m3-large shadow-m3-2 hover:shadow-m3-3 transition-all duration-300 overflow-hidden;
+    }
+
+    /* M3 Expressive Inputs */
+    .m3-input {
+        @apply w-full px-4 py-3 bg-m3-surface-variant border-b-2 border-m3-secondary text-m3-on-surface rounded-t-m3-small focus:border-m3-primary focus:outline-none transition-all placeholder:text-m3-on-surface-variant/50;
+    }
+}

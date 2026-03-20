@@ -28,15 +28,15 @@ class CourseFactory extends Factory
             'Ingeniería de Software',
             'Álgebra Lineal',
             'Sistemas Distribuidos',
-            'Inteligencia Artificial'
+            'Inteligencia Artificial',
         ];
 
         $subj = fake()->randomElement($subjects);
-        $subjCode = strtoupper(substr($subj, 0, 3));
+        $subjCode = mb_strtoupper(mb_substr($subj, 0, 3));
 
         return [
-            'code' => $subjCode . fake()->unique()->numberBetween(100, 999),
-            'name' => $subj . ' ' . fake()->unique()->numberBetween(1, 4),
+            'code' => $subjCode.fake()->unique()->numberBetween(100, 999),
+            'name' => $subj.' '.fake()->unique()->numberBetween(1, 4),
             'department' => fake()->randomElement(['Matemática', 'Programación', 'Ingeniería', 'Hardware', 'Gestión']),
         ];
     }

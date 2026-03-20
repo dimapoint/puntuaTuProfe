@@ -15,8 +15,10 @@ class ReviewController extends Controller
 
     public function store(StoreReviewRequest $request, Teacher $teacher): RedirectResponse
     {
-        if ($this->reviewService->hasUserReviewedTeacher($teacher, $request->user()->id)) {
-            return redirect()->back()->with('error', __('You have already left a review for this teacher.'));
+        $courseId = $request->course_id;
+        
+        if ($this->reviewService->hasUserReviewedTeacherForCourse($teacher, $request->user()->id, $courseId)) {
+            return redirect()->back()->with('error', __('You have already left a review for this teacher in this course.'));
         }
 
         $this->reviewService->createReview($teacher, $request->user(), $request->validated());

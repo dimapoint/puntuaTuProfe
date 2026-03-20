@@ -14,8 +14,8 @@ class StoreTeacherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'bio' => 'nullable|string',
+            'name' => 'required|string|max:255|unique:teachers,name',
+            'bio' => 'nullable|string|max:5000',
             'courses' => 'nullable|array',
             'courses.*' => 'exists:courses,id',
         ];

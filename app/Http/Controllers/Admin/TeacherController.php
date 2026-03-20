@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Teacher;
 use App\Http\Requests\Admin\StoreTeacherRequest;
 use App\Http\Requests\Admin\UpdateTeacherRequest;
+use App\Models\Teacher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -13,7 +13,8 @@ class TeacherController extends Controller
 {
     public function index(): View
     {
-        $teachers = Teacher::with('courses')->orderBy('name')->paginate(15);
+        $teachers = Teacher::with('courses')->orderBy('name')->paginate(50);
+
         return view('admin.teachers.index', compact('teachers'));
     }
 
@@ -36,6 +37,7 @@ class TeacherController extends Controller
     public function edit(Teacher $teacher): View
     {
         $teacher->load('courses');
+
         return view('admin.teachers.edit', compact('teacher'));
     }
 
@@ -55,6 +57,7 @@ class TeacherController extends Controller
     public function destroy(Teacher $teacher): RedirectResponse
     {
         $teacher->delete();
+
         return redirect()->route('admin.teachers.index')->with('success', __('Teacher deleted successfully.'));
     }
 }

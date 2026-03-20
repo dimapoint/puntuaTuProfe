@@ -1,303 +1,283 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $teacher->name }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="flex items-center gap-6">
+                <div class="w-20 h-20 bg-m3-primary text-m3-on-primary rounded-m3-xl flex items-center justify-center text-4xl font-black shadow-m3-2">
+                    {{ substr($teacher->name, 0, 1) }}
                 </div>
-            @endif
-
-            @if (session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif
-
-            <!-- Teacher Info -->
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex-1">
-                    <h3 class="text-2xl font-bold text-gray-900">{{ $teacher->name }}</h3>
-                    <p class="text-lg text-indigo-600 font-semibold">{{ $teacher->courses->pluck('name')->join(', ') }}</p>
-                    <p class="mt-4 text-gray-600 leading-relaxed">{{ $teacher->bio }}</p>
-                </div>
-
-                <div class="flex gap-8 items-center bg-gray-50 p-6 rounded-xl border border-gray-100">
-                    <div class="text-center">
-                        <div class="text-5xl font-black {{ $avgQuality >= 4 ? 'text-green-600' : ($avgQuality >= 2.5 ? 'text-yellow-600' : 'text-red-600') }}">
-                            {{ number_format($avgQuality ?? 0, 1) }}
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Calidad</div>
-                    </div>
-
-                    <div class="h-12 w-px bg-gray-200"></div>
-
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-gray-800">
-                            {{ $wouldTakeAgainPercent }}%
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Volvería</div>
-                    </div>
-
-                    <div class="h-12 w-px bg-gray-200"></div>
-
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-gray-800">
-                            {{ number_format($avgDifficulty ?? 0, 1) }}
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Dificultad</div>
-                    </div>
-
-                    <div class="h-12 w-px bg-gray-200"></div>
-
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-gray-800">
-                            {{ number_format($avgPunctuality ?? 0, 1) }}
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Puntualidad</div>
-                    </div>
-
-                    <div class="h-12 w-px bg-gray-200"></div>
-
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-gray-800">
-                            {{ $attendancePercent }}%
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Asistencia</div>
-                    </div>
-
-                    <div class="h-12 w-px bg-gray-200"></div>
-
-                    <div class="text-center">
-                        <div class="text-3xl font-bold text-gray-800">
-                            {{ number_format($avgOrganization ?? 0, 1) }}
-                        </div>
-                        <div class="text-xs uppercase tracking-wider font-bold text-gray-500 mt-1">Organización</div>
+                <div>
+                    <h2 class="text-4xl font-black text-m3-on-surface tracking-tighter leading-tight">
+                        {{ $teacher->name }}
+                    </h2>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        @foreach($teacher->courses as $course)
+                            <a href="{{ route('courses.show', $course) }}" class="px-3 py-1 bg-m3-primary-container text-m3-on-primary-container text-xs font-black rounded-m3-full hover:brightness-95 transition-all">
+                                {{ $course->code }}
+                            </a>
+                        @endforeach
                     </div>
                 </div>
             </div>
+            
+            <div class="flex gap-3">
+                <a href="#rate-section" class="m3-btn-filled shadow-m3-2">
+                    {{ __('Calificar') }}
+                </a>
+            </div>
+        </div>
+    </x-slot>
 
-            <!-- Review Form Section -->
-            @auth
-                @if($hasReviewed)
-                    <div class="p-4 sm:p-8 bg-indigo-50 shadow sm:rounded-lg border border-indigo-100">
-                        <p class="text-indigo-700 text-center font-medium">
-                            <i class="fas fa-check-circle mr-2"></i> Ya has calificado a este profesor. ¡Gracias por tu aporte!
-                        </p>
-                    </div>
-                @else
-                    <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                        <header>
-                            <h2 class="text-lg font-medium text-gray-900">Califica a este Profesor</h2>
-                            <p class="mt-1 text-sm text-gray-600">Tu reseña ayudará a otros estudiantes a tomar mejores decisiones.</p>
-                        </header>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-12">
 
-                        <form method="post" action="{{ route('reviews.store', $teacher) }}" class="mt-6 space-y-6">
-                            @csrf
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <x-input-label for="course_id" value="Materia" />
-                                    <select id="course_id" name="course_id" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona una materia</option>
-                                        @foreach($courses as $course)
-                                            <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
-                                                {{ $course->code }} - {{ $course->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('course_id')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="teacher_role" value="Tipo de Profesor" />
-                                    <select id="teacher_role" name="teacher_role" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="general" {{ old('teacher_role') == 'general' ? 'selected' : '' }}>General</option>
-                                        <option value="theory" {{ old('teacher_role') == 'theory' ? 'selected' : '' }}>Teórico</option>
-                                        <option value="practice" {{ old('teacher_role') == 'practice' ? 'selected' : '' }}>Práctico</option>
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('teacher_role')" />
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <x-input-label for="would_take_again" value="¿Volverías a cursar con este profesor?" />
-                                    <select id="would_take_again" name="would_take_again" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona una opción</option>
-                                        <option value="1" {{ old('would_take_again') == '1' ? 'selected' : '' }}>Sí</option>
-                                        <option value="0" {{ old('would_take_again') == '0' ? 'selected' : '' }}>No</option>
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('would_take_again')" />
-                                </div>
-
-                                <div class="flex items-center mt-6">
-                                    <label for="takes_attendance" class="inline-flex items-center cursor-pointer">
-                                        <input id="takes_attendance" type="checkbox" name="takes_attendance" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('takes_attendance') ? 'checked' : '' }}>
-                                        <span class="ms-2 text-sm text-gray-700 font-medium">¿Le importa y toma asistencia?</span>
-                                    </label>
-                                    <x-input-error class="mt-2" :messages="$errors->get('takes_attendance')" />
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                                <div>
-                                    <x-input-label for="quality" value="Calidad (1-5)" />
-                                    <select id="quality" name="quality" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona calidad</option>
-                                        @foreach(range(5, 1) as $value)
-                                            <option value="{{ $value }}" {{ old('quality') == $value ? 'selected' : '' }}>
-                                                {{ $value }} - {{ match($value) { 5=>'Excelente', 4=>'Buena', 3=>'Promedio', 2=>'Mala', 1=>'Pésima' } }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('quality')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="difficulty" value="Dificultad (1-5)" />
-                                    <select id="difficulty" name="difficulty" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona dificultad</option>
-                                        @foreach(range(1, 5) as $value)
-                                            <option value="{{ $value }}" {{ old('difficulty') == $value ? 'selected' : '' }}>
-                                                {{ $value }} - {{ match($value) { 1=>'Muy fácil', 2=>'Fácil', 3=>'Promedio', 4=>'Difícil', 5=>'Muy difícil' } }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('difficulty')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="punctuality" value="Puntualidad (1-5)" />
-                                    <select id="punctuality" name="punctuality" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona puntualidad</option>
-                                        @foreach(range(5, 1) as $value)
-                                            <option value="{{ $value }}" {{ old('punctuality') == $value ? 'selected' : '' }}>
-                                                {{ $value }} - {{ match($value) { 5=>'Siempre puntual', 4=>'Casi siempre', 3=>'A veces tarde', 2=>'Frecuentemente tarde', 1=>'Siempre tarde' } }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('punctuality')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="organization" value="Organización (1-5)" />
-                                    <select id="organization" name="organization" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" required>
-                                        <option value="">Selecciona organización</option>
-                                        @foreach(range(5, 1) as $value)
-                                            <option value="{{ $value }}" {{ old('organization') == $value ? 'selected' : '' }}>
-                                                {{ $value }} - {{ match($value) { 5=>'Muy organizado', 4=>'Organizado', 3=>'Promedio', 2=>'Desorganizado', 1=>'Muy desorganizado' } }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('organization')" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <x-input-label for="comment" value="Comentario" />
-                                <textarea id="comment" name="comment" rows="4" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" placeholder="¿Qué debería saber otro estudiante sobre este profesor? (Mínimo 10 caracteres)"></textarea>
-                                <x-input-error class="mt-2" :messages="$errors->get('comment')" />
-                            </div>
-
-                            <div class="flex items-center gap-4">
-                                <x-primary-button>Enviar Reseña</x-primary-button>
-                            </div>
-                        </form>
-                    </div>
-                @endif
-            @else
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <p class="text-gray-600 text-center">Por favor, <a href="{{ route('login') }}" class="text-indigo-600 font-bold hover:underline">inicia sesión</a> para calificar a este profesor.</p>
+            @if (session('success'))
+                <div class="m3-card p-4 bg-green-50 border-green-200 text-green-800 flex items-center gap-3 animate-in fade-in zoom-in duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="font-bold">{{ session('success') }}</span>
                 </div>
-            @endauth
+            @endif
 
-            <!-- Reviews List -->
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <h3 class="text-xl font-bold text-gray-900 mb-6">Reseñas de Estudiantes ({{ $teacher->reviews->count() }})</h3>
-                <div class="space-y-8">
+            <!-- M3 Stats Dashboard -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="m3-card-elevated p-6 text-center bg-m3-primary-container/20">
+                    <div class="text-4xl font-black {{ $avgQuality >= 4 ? 'text-green-600' : ($avgQuality >= 2.5 ? 'text-m3-primary' : 'text-red-600') }}">
+                        {{ number_format($avgQuality ?? 0, 1) }}
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Calidad</div>
+                </div>
+
+                <div class="m3-card-elevated p-6 text-center">
+                    <div class="text-3xl font-black text-m3-on-surface">
+                        {{ $wouldTakeAgainPercent }}%
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Volvería</div>
+                </div>
+
+                <div class="m3-card-elevated p-6 text-center">
+                    <div class="text-3xl font-black text-m3-on-surface">
+                        {{ number_format($avgDifficulty ?? 0, 1) }}
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Dificultad</div>
+                </div>
+
+                <div class="m3-card-elevated p-6 text-center">
+                    <div class="text-3xl font-black text-m3-on-surface">
+                        {{ number_format($avgPunctuality ?? 0, 1) }}
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Puntualidad</div>
+                </div>
+
+                <div class="m3-card-elevated p-6 text-center">
+                    <div class="text-3xl font-black text-m3-on-surface">
+                        {{ $attendancePercent }}%
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Asistencia</div>
+                </div>
+
+                <div class="m3-card-elevated p-6 text-center">
+                    <div class="text-3xl font-black text-m3-on-surface">
+                        {{ number_format($avgOrganization ?? 0, 1) }}
+                    </div>
+                    <div class="text-[10px] uppercase font-black text-m3-on-surface-variant mt-2 tracking-widest">Org.</div>
+                </div>
+            </div>
+
+            <!-- Bio -->
+            @if($teacher->bio)
+                <div class="m3-card p-8 bg-m3-surface-variant/20 border-none italic text-m3-on-surface-variant font-medium text-lg leading-relaxed">
+                    "{{ $teacher->bio }}"
+                </div>
+            @endif
+
+            <div id="rate-section" class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Review Form -->
+                <div class="lg:col-span-5 sticky top-28">
+                    @auth
+                        @if($hasReviewed)
+                            <div class="m3-card-elevated p-10 bg-m3-primary text-m3-on-primary text-center">
+                                <div class="w-16 h-16 bg-m3-on-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                                </div>
+                                <h3 class="text-2xl font-black mb-2">¡Gracias por tu aporte!</h3>
+                                <p class="font-medium opacity-80">Ya has calificado a este profesor. Tus opiniones ayudan a que la comunidad crezca.</p>
+                            </div>
+                        @else
+                            <div class="m3-card-elevated p-8 bg-m3-surface border-t-8 border-t-m3-primary">
+                                <header class="mb-8">
+                                    <h3 class="text-2xl font-black text-m3-on-surface tracking-tight">{{ __('Rate this Professor') }}</h3>
+                                    <p class="text-m3-on-surface-variant font-medium">Compartí tu experiencia real y honesta.</p>
+                                </header>
+
+                                <form method="post" action="{{ route('reviews.store', $teacher) }}" class="space-y-6">
+                                    @csrf
+
+                                    <div class="space-y-4">
+                                        <div>
+                                            <x-input-label for="course_id" value="Materia" class="font-black text-xs uppercase tracking-widest text-m3-primary mb-1" />
+                                            <select id="course_id" name="course_id" class="w-full px-4 py-3 bg-m3-surface-variant border-none rounded-m3-medium font-bold focus:ring-2 focus:ring-m3-primary transition-all" required>
+                                                <option value="">Seleccioná materia</option>
+                                                @foreach($courses as $course)
+                                                    <option value="{{ $course->id }}" {{ old('course_id') == $course->id ? 'selected' : '' }}>
+                                                        {{ $course->code }} - {{ $course->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <x-input-label for="teacher_role" value="Tu rol con él" class="font-black text-xs uppercase tracking-widest text-m3-primary mb-1" />
+                                            <div class="grid grid-cols-3 gap-2">
+                                                @foreach(['general' => 'Gral', 'theory' => 'Teo', 'practice' => 'Prac'] as $val => $label)
+                                                    <label class="cursor-pointer">
+                                                        <input type="radio" name="teacher_role" value="{{ $val }}" class="peer hidden" {{ old('teacher_role', 'general') == $val ? 'checked' : '' }}>
+                                                        <div class="py-2 text-center rounded-m3-medium border-2 border-m3-outline font-black text-xs uppercase peer-checked:bg-m3-primary peer-checked:border-m3-primary peer-checked:text-m3-on-primary transition-all hover:bg-m3-primary/5">
+                                                            {{ $label }}
+                                                        </div>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 gap-4">
+                                        @foreach(['quality' => 'Calidad', 'difficulty' => 'Dificultad', 'punctuality' => 'Puntualidad', 'organization' => 'Org'] as $field => $label)
+                                            <div>
+                                                <x-input-label for="{{ $field }}" value="{{ $label }}" class="font-black text-[10px] uppercase tracking-widest text-m3-on-surface-variant mb-1" />
+                                                <select name="{{ $field }}" class="w-full bg-m3-surface-variant border-none rounded-m3-small font-black text-sm py-2">
+                                                    @for($i=5; $i>=1; $i--)
+                                                        <option value="{{ $i }}">{{ $i }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="flex items-center gap-4 py-2">
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="checkbox" name="takes_attendance" value="1" class="w-5 h-5 rounded-m3-small border-m3-outline text-m3-primary focus:ring-m3-primary/20">
+                                            <span class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">¿Toma asistencia?</span>
+                                        </label>
+                                        
+                                        <div class="h-4 w-px bg-m3-outline"></div>
+
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input type="checkbox" name="would_take_again" value="1" checked class="w-5 h-5 rounded-m3-small border-m3-outline text-m3-primary focus:ring-m3-primary/20">
+                                            <span class="text-sm font-bold text-m3-on-surface group-hover:text-m3-primary transition-colors">¿Volverías?</span>
+                                        </label>
+                                    </div>
+
+                                    <div>
+                                        <x-input-label for="comment" value="Tu comentario" class="font-black text-xs uppercase tracking-widest text-m3-primary mb-1" />
+                                        <textarea id="comment" name="comment" rows="4" class="w-full px-4 py-3 bg-m3-surface-variant border-none rounded-m3-medium font-medium focus:ring-2 focus:ring-m3-primary transition-all placeholder:italic" placeholder="¿Qué debería saber otro alumno?"></textarea>
+                                    </div>
+
+                                    <button type="submit" class="m3-btn-filled w-full shadow-m3-2 py-4 text-lg">
+                                        Publicar Calificación
+                                    </button>
+                                </form>
+                            </div>
+                        @endif
+                    @else
+                        <div class="m3-card-elevated p-10 text-center bg-m3-surface-variant/30">
+                            <p class="text-lg font-black text-m3-on-surface mb-6">Iniciá sesión para calificar a este profesor.</p>
+                            <a href="{{ route('login') }}" class="m3-btn-tonal w-full">Ingresar</a>
+                        </div>
+                    @endauth
+                </div>
+
+                <!-- Reviews List -->
+                <div class="lg:col-span-7 space-y-8">
+                    <div class="flex items-center gap-4 mb-8">
+                        <h3 class="text-3xl font-black text-m3-on-surface tracking-tight">Experiencias</h3>
+                        <div class="h-px flex-grow bg-m3-outline/50"></div>
+                        <span class="px-4 py-1 bg-m3-surface-variant rounded-m3-full text-xs font-black text-m3-on-surface-variant uppercase tracking-widest">
+                            {{ $teacher->reviews->count() }} Reseñas
+                        </span>
+                    </div>
+
                     @forelse($teacher->reviews as $review)
-                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                            <div class="flex justify-between items-start">
-                                <div class="flex gap-4">
-                                    <div class="bg-white p-3 rounded shadow-sm text-center min-w-[80px]">
-                                        <div class="text-xs uppercase text-gray-500 font-bold">Calidad</div>
-                                        <div class="text-2xl font-black text-indigo-600">{{ $review->quality }}</div>
+                        <div class="m3-card p-8 group hover:border-m3-primary/20 transition-all duration-500 relative">
+                            <!-- Floating Quality Badge -->
+                            <div class="absolute -top-4 -right-4 w-12 h-12 bg-m3-primary text-m3-on-primary rounded-m3-large flex items-center justify-center font-black text-xl shadow-m3-2 transform group-hover:scale-110 transition-transform">
+                                {{ $review->quality }}
+                            </div>
+
+                            <div class="flex justify-between items-start mb-6">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-m3-secondary-container rounded-full flex items-center justify-center text-m3-on-secondary-container font-black">
+                                        {{ substr($review->user->name, 0, 1) }}
                                     </div>
-                                    <div class="bg-white p-3 rounded shadow-sm text-center min-w-[80px]">
-                                        <div class="text-xs uppercase text-gray-500 font-bold">Dificultad</div>
-                                        <div class="text-2xl font-black text-gray-700">{{ $review->difficulty }}</div>
-                                    </div>
-                                    <div class="bg-white p-3 rounded shadow-sm text-center min-w-[80px]">
-                                        <div class="text-xs uppercase text-gray-500 font-bold">Puntualidad</div>
-                                        <div class="text-2xl font-black text-gray-700">{{ $review->punctuality }}</div>
-                                    </div>
-                                    <div class="bg-white p-3 rounded shadow-sm text-center min-w-[80px]">
-                                        <div class="text-xs uppercase text-gray-500 font-bold">Org.</div>
-                                        <div class="text-2xl font-black text-gray-700">{{ $review->organization }}</div>
+                                    <div>
+                                        <div class="font-black text-m3-on-surface">{{ $review->user->name }}</div>
+                                        <div class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-widest opacity-60">{{ $review->created_at->diffForHumans() }}</div>
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-sm font-bold text-gray-900">{{ $review->user->name }}</div>
-                                    <div class="text-xs text-gray-500">{{ $review->created_at->diffForHumans() }}</div>
-                                    <div class="mt-1 flex gap-1 justify-end">
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold {{ $review->teacher_role == 'theory' ? 'bg-blue-100 text-blue-800' : ($review->teacher_role == 'practice' ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-800') }}">
-                                            {{ match($review->teacher_role) { 'theory' => 'TEÓRICO', 'practice' => 'PRÁCTICO', 'general' => 'GENERAL' } }}
+                                <div class="flex flex-col items-end gap-1">
+                                    @if($review->course)
+                                        <span class="px-2 py-0.5 bg-m3-primary-container text-[10px] font-black text-m3-on-primary-container rounded-m3-small uppercase">
+                                            {{ $review->course->code }}
                                         </span>
-                                        @if($review->course)
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-indigo-100 text-indigo-800">
-                                                {{ $review->course->code }}
-                                            </span>
-                                        @endif
-                                    </div>
+                                    @endif
+                                    <span class="text-[10px] font-black px-2 py-0.5 rounded-m3-small uppercase {{ $review->teacher_role == 'theory' ? 'bg-blue-100 text-blue-800' : ($review->teacher_role == 'practice' ? 'bg-orange-100 text-orange-800' : 'bg-gray-100 text-gray-800') }}">
+                                        {{ $review->teacher_role }}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="mt-4 text-gray-700 italic">
+
+                            <div class="text-lg text-m3-on-surface-variant leading-relaxed mb-8 font-medium italic border-l-4 border-m3-outline pl-6">
                                 "{{ $review->comment }}"
                             </div>
-                            <div class="mt-4 flex flex-wrap gap-4 items-center">
-                                @if($review->would_take_again !== null)
-                                    <div class="text-sm font-semibold {{ $review->would_take_again ? 'text-green-600' : 'text-red-600' }}">
-                                        {{ $review->would_take_again ? '✓ Volvería a cursar' : '✗ No volvería a cursar' }}
+
+                            <div class="flex flex-wrap gap-6 items-center">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-black uppercase text-m3-on-surface-variant opacity-50">Dificultad</span>
+                                    <div class="flex gap-1">
+                                        @for($i=1; $i<=5; $i++)
+                                            <div class="w-2 h-2 rounded-full {{ $i <= $review->difficulty ? 'bg-m3-on-surface' : 'bg-m3-outline' }}"></div>
+                                        @endfor
                                     </div>
-                                @endif
-                                <div class="text-sm font-semibold {{ $review->takes_attendance ? 'text-amber-600' : 'text-gray-500' }}">
-                                    <i class="fas {{ $review->takes_attendance ? 'fa-clipboard-check' : 'fa-user-slash' }} mr-1"></i>
-                                    {{ $review->takes_attendance ? 'Toma asistencia' : 'No toma asistencia' }}
+                                </div>
+                                
+                                <div class="flex gap-3">
+                                    @if($review->would_take_again)
+                                        <span class="text-[10px] font-black text-green-600 uppercase bg-green-50 px-2 py-1 rounded-m3-small">✓ Volvería</span>
+                                    @else
+                                        <span class="text-[10px] font-black text-red-600 uppercase bg-red-50 px-2 py-1 rounded-m3-small">✗ No volvería</span>
+                                    @endif
+
+                                    @if($review->takes_attendance)
+                                        <span class="text-[10px] font-black text-m3-primary uppercase bg-m3-primary/5 px-2 py-1 rounded-m3-small">Toma Asistencia</span>
+                                    @endif
                                 </div>
                             </div>
 
-                            <div class="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
-                                <span class="text-xs text-gray-500 uppercase tracking-wider font-bold">¿Te fue útil esta reseña?</span>
-                                <div class="flex items-center gap-2">
-                                    <form method="POST" action="{{ route('helpfulness.store', $review) }}" class="inline">
+                            <!-- Helpful Votes -->
+                            <div class="mt-8 pt-6 border-t border-m3-outline/30 flex items-center justify-between">
+                                <span class="text-[10px] font-black text-m3-on-surface-variant uppercase tracking-widest">¿Te ayudó esta reseña?</span>
+                                <div class="flex gap-2">
+                                    <form method="POST" action="{{ route('helpfulness.store', $review) }}">
                                         @csrf
                                         <input type="hidden" name="is_helpful" value="1">
-                                        <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium border {{ $review->helpfulnessVotes()->where('user_id', auth()->id())->where('is_helpful', true)->exists() ? 'bg-green-100 border-green-200 text-green-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50' }} transition-colors">
-                                            <i class="fas fa-thumbs-up"></i>
-                                            <span>{{ $review->helpful_count }}</span>
+                                        <button class="flex items-center gap-2 px-4 py-1.5 rounded-m3-full border-2 border-m3-outline hover:border-m3-primary transition-all text-xs font-black {{ $review->helpfulnessVotes()->where('user_id', auth()->id())->where('is_helpful', true)->exists() ? 'bg-m3-primary text-m3-on-primary border-m3-primary' : '' }}">
+                                            <span>Útil</span>
+                                            <span class="opacity-60">{{ $review->helpful_count }}</span>
                                         </button>
                                     </form>
-
-                                    <form method="POST" action="{{ route('helpfulness.store', $review) }}" class="inline">
+                                    <form method="POST" action="{{ route('helpfulness.store', $review) }}">
                                         @csrf
                                         <input type="hidden" name="is_helpful" value="0">
-                                        <button type="submit" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium border {{ $review->helpfulnessVotes()->where('user_id', auth()->id())->where('is_helpful', false)->exists() ? 'bg-red-100 border-red-200 text-red-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50' }} transition-colors">
-                                            <i class="fas fa-thumbs-down"></i>
-                                            <span>{{ $review->not_helpful_count }}</span>
+                                        <button class="flex items-center gap-2 px-4 py-1.5 rounded-m3-full border-2 border-m3-outline hover:border-red-400 transition-all text-xs font-black {{ $review->helpfulnessVotes()->where('user_id', auth()->id())->where('is_helpful', false)->exists() ? 'bg-red-500 text-white border-red-500' : '' }}">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                         </button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <p class="text-gray-500 text-center py-8">Aún no hay reseñas. ¡Sé el primero en calificar!</p>
+                        <div class="m3-card p-12 text-center bg-m3-surface-variant/10 border-dashed">
+                            <p class="font-bold text-m3-on-surface-variant italic">Aún no hay opiniones. ¡Sé el primero!</p>
+                        </div>
                     @endforelse
                 </div>
             </div>

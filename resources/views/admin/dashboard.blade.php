@@ -148,7 +148,7 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="p-6 border-b border-gray-50 flex justify-between items-center">
                         <h3 class="text-lg font-black text-gray-900 uppercase tracking-tight">{{ __('Top Rated Teachers') }}</h3>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">Top 5</span>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700">Top 10</span>
                     </div>
                     <div class="divide-y divide-gray-50">
                         @foreach($top_teachers as $teacher)
