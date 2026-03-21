@@ -126,9 +126,9 @@
                                         </div>
 
                                         <div>
-                                            <x-input-label for="teacher_role" value="Tu rol con él" class="font-black text-xs uppercase tracking-widest text-m3-primary mb-1" />
+                                            <x-input-label for="teacher_role" value="Lo tuviste en teórico o practico?" class="font-black text-xs uppercase tracking-widest text-m3-primary mb-1" />
                                             <div class="grid grid-cols-3 gap-2">
-                                                @foreach(['general' => 'Gral', 'theory' => 'Teo', 'practice' => 'Prac'] as $val => $label)
+                                                @foreach(['general' => 'General', 'theory' => 'Teórico', 'practice' => 'Práctico'] as $val => $label)
                                                     <label class="cursor-pointer">
                                                         <input type="radio" name="teacher_role" value="{{ $val }}" class="peer hidden" {{ old('teacher_role', 'general') == $val ? 'checked' : '' }}>
                                                         <div class="py-2 text-center rounded-m3-medium border-2 border-m3-outline font-black text-xs uppercase peer-checked:bg-m3-primary peer-checked:border-m3-primary peer-checked:text-m3-on-primary transition-all hover:bg-m3-primary/5">
@@ -145,8 +145,9 @@
                                             <div>
                                                 <x-input-label for="{{ $field }}" value="{{ $label }}" class="font-black text-[10px] uppercase tracking-widest text-m3-on-surface-variant mb-1" />
                                                 <select name="{{ $field }}" class="w-full bg-m3-surface-variant border-none rounded-m3-small font-black text-sm py-2">
+                                                    <option value="">-</option>
                                                     @for($i=5; $i>=1; $i--)
-                                                        <option value="{{ $i }}">{{ $i }}</option>
+                                                        <option value="{{ $i }}" {{ old($field) == $i ? 'selected' : '' }}>{{ $i }}</option>
                                                     @endfor
                                                 </select>
                                             </div>
@@ -200,17 +201,19 @@
                         <div class="m3-card p-8 group hover:border-m3-primary/20 transition-all duration-500 relative">
                             <!-- Floating Quality Badge -->
                             <div class="absolute -top-4 -right-4 w-12 h-12 bg-m3-primary text-m3-on-primary rounded-m3-large flex items-center justify-center font-black text-xl shadow-m3-2 transform group-hover:scale-110 transition-transform">
-                                {{ $review->quality }}
+                                {{ $review->quality ?? '-' }}
                             </div>
 
                             <div class="flex justify-between items-start mb-6">
                                 <div class="flex items-center gap-4">
                                     <div class="w-12 h-12 bg-m3-secondary-container rounded-full flex items-center justify-center text-m3-on-secondary-container font-black">
-                                        {{ substr($review->user->name, 0, 1) }}
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                     </div>
                                     <div>
-                                        <div class="font-black text-m3-on-surface">{{ $review->user->name }}</div>
-                                        <div class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-widest opacity-60">{{ $review->created_at->diffForHumans() }}</div>
+                                        <div class="font-black text-m3-on-surface">Alumno Anónimo</div>
+                                        <div class="text-[10px] font-bold text-m3-on-surface-variant uppercase tracking-widest opacity-60">
+                                            {{ $review->user->career?->name ?? 'Estudiante' }} • {{ $review->created_at->diffForHumans() }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-end gap-1">
@@ -233,9 +236,13 @@
                                 <div class="flex items-center gap-2">
                                     <span class="text-[10px] font-black uppercase text-m3-on-surface-variant opacity-50">Dificultad</span>
                                     <div class="flex gap-1">
-                                        @for($i=1; $i<=5; $i++)
-                                            <div class="w-2 h-2 rounded-full {{ $i <= $review->difficulty ? 'bg-m3-on-surface' : 'bg-m3-outline' }}"></div>
-                                        @endfor
+                                        @if($review->difficulty)
+                                            @for($i=1; $i<=5; $i++)
+                                                <div class="w-2 h-2 rounded-full {{ $i <= $review->difficulty ? 'bg-m3-on-surface' : 'bg-m3-outline' }}"></div>
+                                            @endfor
+                                        @else
+                                            <span class="text-[10px] font-bold text-m3-outline uppercase">N/D</span>
+                                        @endif
                                     </div>
                                 </div>
                                 

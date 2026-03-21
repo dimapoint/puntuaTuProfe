@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -13,24 +15,29 @@ Route::get('/', function () {
 });
 
 Route::get('/teachers', [TeacherController::class, 'index'])->name('teachers.index');
-Route::middleware(['auth', 'throttle:6,1'])->group(function () {
-    Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
-    Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
-});
-
 Route::get('/teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show');
 Route::get('/courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
-Route::middleware(['auth', 'throttle:3,1'])->group(function () {
-    Route::post('/teachers/{teacher}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    Route::post('/reviews/{review}/helpfulness', [ReviewHelpfulnessController::class, 'store'])->name('helpfulness.store');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/select-career', [CareerController::class, 'create'])->name('careers.select');
+    Route::post('/select-career', [CareerController::class, 'store'])->name('careers.store');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'career'])->group(function () {
+    Route::middleware(['throttle:6,1'])->group(function () {
+        Route::get('/teachers/create', [TeacherController::class, 'create'])->name('teachers.create');
+        Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
+    });
 
-Route::middleware('auth')->group(function () {
+    Route::middleware(['throttle:3,1'])->group(function () {
+        Route::post('/teachers/{teacher}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+        Route::post('/reviews/{review}/helpfulness', [ReviewHelpfulnessController::class, 'store'])->name('helpfulness.store');
+    });
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware(['verified'])
+        ->name('dashboard');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -40,7 +47,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('teachers', App\Http\Controllers\Admin\TeacherController::class)->except(['show']);
     Route::resource('courses', App\Http\Controllers\Admin\CourseController::class)->except(['show']);
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class)->only(['index', 'destroy']);
+    Route::resource('users', UserController::class)->only(['index', 'destroy']);
 });
 
 require __DIR__.'/auth.php';

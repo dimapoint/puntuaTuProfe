@@ -57,7 +57,7 @@
                                 <div class="flex justify-between items-start">
                                     <div>
                                         <div class="flex items-center gap-2">
-                                            <span class="font-bold text-gray-900">{{ $review->user->name }}</span>
+                                            <span class="font-bold text-gray-900">Alumno Anónimo</span>
                                             <span class="text-xs text-gray-400 font-medium">• {{ $review->created_at->diffForHumans() }}</span>
                                         </div>
                                         <p class="text-sm text-indigo-600 font-semibold mt-1">
@@ -65,7 +65,7 @@
                                         </p>
                                     </div>
                                     <div class="bg-indigo-50 px-3 py-1 rounded-full text-indigo-700 font-bold text-sm">
-                                        {{ $review->quality }}/5
+                                        {{ $review->quality ?? '-' }}@if($review->quality)/5 @endif
                                     </div>
                                 </div>
                                 <div class="mt-3 text-gray-600 italic">

@@ -12,6 +12,7 @@ class ProfileTest extends TestCase
 
     public function test_profile_page_is_displayed(): void
     {
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureUserHasCareer::class);
         $user = User::factory()->create();
 
         $response = $this
@@ -23,7 +24,7 @@ class ProfileTest extends TestCase
 
     public function test_profile_information_can_be_updated(): void
     {
-        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class);
+        $this->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class, \App\Http\Middleware\EnsureUserHasCareer::class]);
         $user = User::factory()->create();
 
         $response = $this
@@ -46,7 +47,7 @@ class ProfileTest extends TestCase
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
     {
-        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class);
+        $this->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class, \App\Http\Middleware\EnsureUserHasCareer::class]);
         $user = User::factory()->create();
 
         $response = $this
@@ -65,7 +66,7 @@ class ProfileTest extends TestCase
 
     public function test_user_can_delete_their_account(): void
     {
-        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class);
+        $this->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class, \App\Http\Middleware\EnsureUserHasCareer::class]);
         $user = User::factory()->create();
 
         $response = $this
@@ -84,7 +85,7 @@ class ProfileTest extends TestCase
 
     public function test_correct_password_must_be_provided_to_delete_account(): void
     {
-        $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class);
+        $this->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class, \App\Http\Middleware\EnsureUserHasCareer::class]);
         $user = User::factory()->create();
 
         $response = $this

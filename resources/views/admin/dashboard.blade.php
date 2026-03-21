@@ -130,12 +130,12 @@
                                     </div>
                                     <div>
                                         <div class="text-sm font-black text-gray-900">{{ $review->teacher->name }}</div>
-                                        <div class="text-xs text-gray-500 font-medium">{{ __('por') }} {{ $review->user->name }}</div>
+                                        <div class="text-xs text-gray-500 font-medium">{{ __('por') }} Alumno Anónimo</div>
                                     </div>
                                 </div>
                                 <div class="text-right">
                                     <div class="inline-flex items-center px-2 py-1 rounded-md bg-indigo-50 text-xs font-black text-indigo-700 border border-indigo-100 mb-1">
-                                        {{ $review->quality }} / 5
+                                        {{ $review->quality ?? '-' }}@if($review->quality) / 5 @endif
                                     </div>
                                     <div class="text-[10px] text-gray-400 font-bold uppercase">{{ $review->created_at->diffForHumans() }}</div>
                                 </div>

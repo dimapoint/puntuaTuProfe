@@ -54,16 +54,18 @@
                                             </a>
                                         </div>
                                         <div class="text-sm text-gray-600">
-                                            {{ $review->course->name }} • {{ __('por') }} {{ $review->user->name }}
+                                            {{ $review->course->name }} • {{ __('por') }} Alumno Anónimo
                                         </div>
                                         <div class="mt-1 text-gray-500 text-sm line-clamp-1">
                                             "{{ $review->comment }}"
                                         </div>
                                     </div>
                                     <div class="mt-2 sm:mt-0 flex items-center bg-indigo-50 px-3 py-1 rounded-full">
-                                        <span class="text-indigo-700 font-bold text-lg">{{ $review->quality }}</span>
-                                        <span class="text-indigo-300 mx-1">/</span>
-                                        <span class="text-indigo-400 text-sm">5</span>
+                                        <span class="text-indigo-700 font-bold text-lg">{{ $review->quality ?? '-' }}</span>
+                                        @if($review->quality)
+                                            <span class="text-indigo-300 mx-1">/</span>
+                                            <span class="text-indigo-400 text-sm">5</span>
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
